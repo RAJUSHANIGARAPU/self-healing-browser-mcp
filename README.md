@@ -7,6 +7,10 @@
 
 An **[MCP](https://modelcontextprotocol.io) server** that hands an AI agent — Claude Desktop, Claude Code, Cursor, or anything that speaks MCP — a real browser to drive, with **self-healing locators**.
 
+<p align="center">
+  <img src="docs/demo.gif" alt="A locator hint surviving a refactor that deletes its data-testid — the engine heals to the role + accessible name and reports it" width="720">
+</p>
+
 ## Why
 
 The moment you let an agent automate a browser, brittle selectors bite: a `data-testid` gets renamed, the DOM is restructured, a button's markup changes — and the run dies on a `locator not found`. Agents burn tokens retrying, or just give up.
