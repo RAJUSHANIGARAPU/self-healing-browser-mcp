@@ -88,6 +88,21 @@ pytest
 
 The self-healing engine (`src/self_healing_browser_mcp/engine.py`) is decoupled from the MCP layer and tested deterministically against in-memory HTML — no external site, no flakiness.
 
+## Releasing
+
+Publishing to PyPI is automated with GitHub Actions via
+[PyPI Trusted Publishing](https://docs.pypi.org/trusted-publishers/) (OIDC) — no API
+token is stored in the repo. Every push builds and `twine check`s the distribution in
+CI, so `main` is always release-ready.
+
+To cut a release:
+
+1. **One-time:** on PyPI, create the `self-healing-browser-mcp` project's Trusted
+   Publisher pointing at this repo, workflow `publish.yml`, and environment `pypi`.
+2. Bump `version` in `pyproject.toml`, commit, and tag (`git tag v0.1.1 && git push --tags`).
+3. Publish a GitHub Release for that tag — the `Publish to PyPI` workflow builds and
+   uploads automatically. After that, `pip install self-healing-browser-mcp` works.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
