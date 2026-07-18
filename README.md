@@ -27,6 +27,22 @@ testid  →  role + name  →  label  →  placeholder  →  text  →  css  →
 
 The agent "sees" the page semantically via `browser_snapshot` (roles + accessible names from the accessibility tree), not raw HTML or screenshots.
 
+## Demo
+
+See it heal live — the *same* locator hint keeps working after a refactor deletes the element's `data-testid` ([`examples/self_healing_demo.py`](examples/self_healing_demo.py)):
+
+```console
+$ python examples/self_healing_demo.py
+1) Original app — the preferred data-testid resolves the button:
+   -> resolved via 'testid'   healed=False
+
+2) After a refactor removed the data-testid — SAME hint, no code change:
+   -> resolved via 'role'       healed=True
+   -> clicked the recovered element successfully
+```
+
+The `data-testid` the agent learned is gone, but because the hint also carried the button's role and accessible name, the engine recovered the element, flagged the heal, and the element stayed clickable — no test edit, no agent retry loop.
+
 ## Tools
 
 | Tool | What it does |
