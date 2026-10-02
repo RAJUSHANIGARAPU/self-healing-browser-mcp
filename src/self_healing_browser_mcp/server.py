@@ -17,11 +17,11 @@ from __future__ import annotations
 
 import json
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 
 from .engine import BrowserSession, ElementNotFound, Hint, resolve, snapshot_interactive
 
-mcp = FastMCP("self-healing-browser")
+mcp = MCPServer("self-healing-browser")
 _session = BrowserSession()
 
 

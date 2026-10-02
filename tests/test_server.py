@@ -22,8 +22,8 @@ async def test_all_tools_are_registered():
 
 async def test_element_tools_expose_locator_strategies():
     by_name = {t.name: t for t in await mcp.list_tools()}
-    props = set(by_name["browser_click"].inputSchema.get("properties", {}))
+    props = set(by_name["browser_click"].input_schema.get("properties", {}))
     assert {"testid", "role", "name", "label", "placeholder", "text", "css"} <= props
     # browser_fill additionally requires the value to type
-    fill_props = set(by_name["browser_fill"].inputSchema.get("properties", {}))
+    fill_props = set(by_name["browser_fill"].input_schema.get("properties", {}))
     assert "value" in fill_props
