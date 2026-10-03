@@ -1,6 +1,7 @@
 # self-healing-browser-mcp
 
 [![CI](https://github.com/RAJUSHANIGARAPU/self-healing-browser-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/RAJUSHANIGARAPU/self-healing-browser-mcp/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/self-healing-browser-mcp)](https://pypi.org/project/self-healing-browser-mcp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![MCP](https://img.shields.io/badge/protocol-MCP-8A2BE2)
@@ -63,16 +64,19 @@ The `...` on element tools is the locator strategy set: `testid`, `role`, `name`
 
 ## Install
 
-Not on PyPI yet, so `pip install self-healing-browser-mcp` will not find it. Install from
-source into a virtual environment, then download the Chromium build Playwright drives:
+From PyPI, into a virtual environment, then download the Chromium build Playwright drives:
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install "git+https://github.com/RAJUSHANIGARAPU/self-healing-browser-mcp"
+.venv/bin/pip install self-healing-browser-mcp
 .venv/bin/python -m playwright install chromium
 ```
 
-Or from a clone (editable, for development):
+The server executable is `.venv/bin/self-healing-browser-mcp` (on Windows,
+`.venv\Scripts\self-healing-browser-mcp.exe`). It is only on your `PATH` while that venv is
+active, and MCP clients do not activate it, so point the client at the **full path**.
+
+To work on the code, install from a clone instead (editable):
 
 ```bash
 git clone https://github.com/RAJUSHANIGARAPU/self-healing-browser-mcp
@@ -82,13 +86,39 @@ python3 -m venv .venv
 .venv/bin/python -m playwright install chromium
 ```
 
-Either way, the server executable is `.venv/bin/self-healing-browser-mcp` (on Windows,
-`.venv\Scripts\self-healing-browser-mcp.exe`). It is only on your `PATH` while that venv is
-active, and MCP clients do not activate it, so point the client at the **full path**.
-
 ## Use it from an MCP client
 
-**Option A — the venv you installed into.** Replace `/abs/path/to/.venv` with the real path.
+**Option A — no venv, with [`uv`](https://docs.astral.sh/uv/).** `uvx` installs the package
+from PyPI into a cached environment and runs it. Download Chromium once with the same
+Playwright version:
+
+```bash
+uvx --from self-healing-browser-mcp playwright install chromium
+```
+
+Claude Code:
+
+```bash
+claude mcp add self-healing-browser -- uvx self-healing-browser-mcp
+```
+
+Claude Desktop / Cursor (MCP servers config):
+
+```json
+{
+  "mcpServers": {
+    "self-healing-browser": {
+      "command": "uvx",
+      "args": ["self-healing-browser-mcp"]
+    }
+  }
+}
+```
+
+The first launch downloads dependencies, so the client's first connection can take a few
+seconds longer.
+
+**Option B — the venv you installed into.** Replace `/abs/path/to/.venv` with the real path.
 
 Claude Code:
 
@@ -107,32 +137,6 @@ Claude Desktop / Cursor (MCP servers config):
   }
 }
 ```
-
-**Option B — no venv, with [`uv`](https://docs.astral.sh/uv/).** `uvx` builds the package from
-GitHub into a cached environment and runs it. Download Chromium once with the same
-Playwright version:
-
-```bash
-uvx --from git+https://github.com/RAJUSHANIGARAPU/self-healing-browser-mcp playwright install chromium
-```
-
-```json
-{
-  "mcpServers": {
-    "self-healing-browser": {
-      "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/RAJUSHANIGARAPU/self-healing-browser-mcp",
-        "self-healing-browser-mcp"
-      ]
-    }
-  }
-}
-```
-
-The first launch downloads dependencies, so the client's first connection can take a few
-seconds longer.
 
 Then ask your agent to, e.g., *"open example.com, snapshot the page, and click the Sign in button."* When a selector has drifted, the tool result will say it healed.
 
@@ -181,13 +185,10 @@ CI, so `main` is always release-ready.
 
 To cut a release:
 
-1. **One-time:** on PyPI, create the `self-healing-browser-mcp` project's Trusted
-   Publisher pointing at this repo, workflow `publish.yml`, and environment `pypi`.
-2. Bump `version` in `pyproject.toml`, commit, and tag (`git tag v0.1.1 && git push --tags`).
-3. Publish a GitHub Release for that tag — the `Publish to PyPI` workflow builds and
-   uploads automatically. After that, `pip install self-healing-browser-mcp` works.
-
-No release has been published yet, so the package is not on PyPI.
+1. Bump `version` in `pyproject.toml`, commit, and tag (`git tag v0.1.1 && git push --tags`).
+2. Publish a GitHub Release for that tag — the `Publish to PyPI` workflow builds and
+   uploads it to [PyPI](https://pypi.org/project/self-healing-browser-mcp/) through the
+   project's Trusted Publisher (workflow `publish.yml`, environment `pypi`).
 
 ## License
 
